@@ -132,9 +132,9 @@ def get_overview_layout(df_loc, df_route, df_notif):
         dbc.Row([
             dbc.Col(dbc.Card([
                 dbc.CardHeader([
-                    html.I(className="fas fa-list-ul me-2"),
+                    html.I(),
                     "Recent High-Priority Alert Feed"
-                ], className="fw-bold bg-white border-0 py-3"),
+                ]),
                 dbc.CardBody([
                     dash_table.DataTable(
                         id='overview-alert-table',
@@ -157,7 +157,7 @@ def get_overview_layout(df_loc, df_route, df_notif):
                         )
                     ])
                 ])
-            ], className="border-0 shadow-sm mb-4"), width=12),
+            ]), width=12),
         ]),
 
         # Audit Log Section (Placeholder)
@@ -726,12 +726,12 @@ def get_notification_layout(df_notif):
 
         dbc.Row([
             dbc.Col([
-                dbc.Button([html.I(className="fas fa-plus me-2"), "Create Alert"],
-                           id="open-notif-modal-btn", color="primary", className="px-4 shadow-sm")
+                dbc.Button([html.I(), "Create Alert"],
+                           id="open-notif-modal-btn", color="primary")
             ], width="auto"),
             dbc.Col([
                 dbc.InputGroup([
-                    dbc.InputGroupText(html.I(className="fas fa-filter")),
+                    dbc.InputGroupText(html.I()),
                     dbc.Select(
                         id="notif-severity-filter",
                         options=[{"label": "All Severities",
@@ -741,18 +741,18 @@ def get_notification_layout(df_notif):
                     )
                 ])
             ], width=3)
-        ], className="mb-4 justify-content-between align-items-center"),
+        ]),
 
         # Action buttons row (Delete/Acknowledge)
         dbc.Row([
             dbc.Col([
                 dbc.ButtonGroup([
-                    dbc.Button([html.I(className="fas fa-check me-2"), "Acknowledge"],
+                    dbc.Button([html.I(), "Acknowledge"],
                                id="acknowledge-notif-btn", color="success", outline=True, disabled=True),
-                    dbc.Button([html.I(className="fas fa-trash me-2"), "Delete"],
+                    dbc.Button([html.I(), "Delete"],
                                id="delete-notif-btn", color="danger", outline=True, disabled=True),
                 ])
-            ], width="auto", className="mb-3")
+            ], width="auto")
         ]),
 
         dbc.Card([

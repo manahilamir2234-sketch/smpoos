@@ -523,3 +523,6 @@ N2262,Security Notice,L0240,Medium,Security incident reported near Berth 40 Area
 N9583,Equipment Failure,L0031,High,Crane L0031 experiencing mechanical issues,2026-05-04T12:16:02.797812
 N8202,Berth Closure,L0286,Low,Berth 49 Area A temporarily closed for maintenance,2026-05-04T12:17:57.431277
 N9398,Berth Closure,L0314,Critical,Berth 29 Area B temporarily closed for maintenance,2026-05-04T12:27:40.504642
+N6620,Security Notice,L0008,Low,Security incident reported near Berth 10 Area B,2026-06-03T00:03:32.889242
+N1696,Berth Closure,L0235,Medium,Berth 44 Area D temporarily closed for maintenance,2026-06-03T00:03:37.883659
+N3330,Congestion Alert,L0432,Low,High traffic congestion detected at Berth 47 Area A,2026-06-03T00:03:41.881545
