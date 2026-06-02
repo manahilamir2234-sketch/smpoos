@@ -1,8 +1,8 @@
-# SMPOOS - Smart Maritime Port Operations Optimisation System
+# SMPOOS - Smart Maritime Port Operations Optimization System
 
-A Python-based dashboard for managing port operations, infrastructure, routes, personnel, and operational notifications.
+A Python dashboard that can be used to oversee port operations, port infrastructure, port routes, staff and port operation notifications.
 
-SMPOOS is a maritime management prototype designed for HarbourView International Port to address the complexities of modern logistics. The system provides a unified interface for monitoring vessel paths, environmental status, and port asset utilization, built using Pure Python logic without external CSS frameworks.
+SMPOOS represents a prototype system for maritime management purposes in HarbourView International Port. This system provides a centralized platform for tracking vessel routes, environmental conditions, and the usage of port resources, being built purely on Python code.
 
 ---
 
@@ -28,45 +28,44 @@ SMPOOS is a maritime management prototype designed for HarbourView International
 
 ## Project Overview
 
-### System Scenario
-HarbourView International Port faces increasing vessel traffic and operational complexity. Manual tracking of berths and hazards leads to communication delays and safety risks.
+### System Context
+The increasing number of ships and complexity in their activities poses a problem for HarbourView International Port. This involves difficulties arising from manual control of berths and hazardous zones and related problems concerning communication and safety.
 
-### Core Objectives
-- Centralize port asset management (berths, yards, docks).
-- Automate operational notifications based on event severity.
-- Provide real-time visibility into port traffic and resource occupancy.
-- Implement secure, role-based access for different port personnel.
+### Project Objectives
+- Centralized management of the port facilities like berths, yards, docks.
+- Event alerting system depending on the severity of events.
+- Monitoring of traffic and availability of resources in real time.
+- Access control for ensuring security.
 
-### Scope
-This prototype focuses on the core management dashboard, CRUD operations for port data, and visual analytics for decision support. It uses synthetic data to simulate a live port environment.
+### Project Scope
+The scope of this prototype includes (i) the user interface, (ii) creation/reading/updating/deleting information about the port and its resources, and (iii) visualizations useful for decision-making. The prototype will rely on synthetic data.
 
 ---
 
 ## Key Features
 
-- **Interactive Dashboard**: Real-time metrics widgets showing active berths, open routes, and critical hazards.
-- **Asset Registry**: Full CRUD management for port infrastructure with search and status filtering.
-- **Operational Analytics**: Strategic charts for berth utilization, peak activity hours, and route efficiency.
-- **Notification Engine**: Severity-based alert system for weather warnings, equipment failure, and congestion.
-- **Admin Authentication**: Secure login system with session persistence and environment variable configuration.
-- **Audit Logging**: Automated tracking of all system modifications for accountability.
+- **Dashboard Interface**: Metrics that include active berth, open routes, and danger zones, displayed in widgets.
+- **Assets Management**: A fully fledged CRUD interface for managing ports infrastructure, which includes search capabilities and filter options based on status.
+- **Operations Analysis**: Visual analysis related to berth occupancy, busy periods, and effective routes.
+- **Alert System**: Weather alerts, equipment failure, and congestion warnings, categorized into different levels of severity.
+- **Admin Access Control**: An advanced access control module with session management through environment variables.
+- **Activity Log Monitoring**: Automated monitoring of changes made to the system.
 
 ---
 
 ## System Architecture
 
-SMPOOS uses a modular layered architecture:
+SMPOOS system is designed using a modular architecture:
+- **Front End (Visualization Engine)**: Developed using Dash and Plotly for graph and table based visual representations.
+- **Processing Logic**: Python based object-oriented classes present in src/smpoos_logic.py that handle business logic and perform CRUD operations.
+- **Data Manager**: Handler class managing the data stored in CSV files.
+- **Integration Between Front End and Back End**: Using callbacks in Dash.
 
-- **Frontend (Visualisation Engine)**: Built with Dash and Plotly to generate interactive charts and tables.
-- **Processing Logic**: Object-oriented Python classes in `src/smpoos_logic.py` manage the business rules and CRUD operations.
-- **Data Ingestion**: A dedicated handler reads and writes to CSV files, providing a lightweight persistence layer.
-- **Communication**: Components communicate via Dash callbacks, ensuring the UI stays synchronized with the underlying data state.
-
-### Technologies Used
-- **Dash**: Core web framework.
-- **Plotly**: Interactive data visualization.
-- **Pandas**: Data manipulation and analytics.
-- **Python ABC/Enum**: For robust object-oriented structure.
+### Technologies Employed
+- **Dash**: Primary web application framework.
+- **Plotly**: Visual representation of data.
+- **Pandas**: Data management and analysis.
+- **Python ABC / Enum**: Object-Oriented Programming support.
 
 ---
 
@@ -136,20 +135,20 @@ The system uses four synthetic CSV files.
 **IMPORTANT ETHICS NOTE**: All data used in this system is entirely synthetic and generated for academic prototyping purposes. No real-world operational data or personal information is used.
 
 ### Data Dictionary
-- **Locations**: Berths, Storage Yards, Fuel Docks, etc. (ID, Name, Type, Status, Capacity).
-- **Routes**: Shipping Lanes, AGV Routes, Truck Paths (Start, End, Distance, Status).
-- **Notifications**: System alerts (Type, Severity, Message, Timestamp).
-- **Users**: Personnel records and role assignments (Name, Role, Email, Active Status).
+- **Locations**: Berths, Storage Sites, Refueling Docks, etc. (ID, Name, Type, Status, Capacity).
+- **Routes**: Shipping Routes, AGV Routes, Truck Routes (Start Point, End Point, Length, Status).
+- **Notifications**: System notifications (Type, Severity, Content, Time Stamp).
+- **Users**: User records (Name, Role, Email ID, Status).
 
 ---
 
 ## Usage Instructions
 
-1. **Access**: Open http://localhost:8050 in your browser.
-2. **Login**: Use `admin` / `admin123`.
-3. **Dashboard**: Observe the 5-second auto-refreshing metrics and live alert feed.
-4. **Management**: Navigate to Assets or Routes to add/edit/delete data.
-5. **Analytics**: Use the Strategic Analytics tab to view trends and performance metrics.
+1. **Access**: Open http://localhost:8050 using your chosen internet browser.
+2. **Login**: Enter the login details that are admin and admin123.
+3. **Dashboard**: View the statistics with an interval of five seconds.
+4. **Management**: Go to the Assets or Routes tab to manage records such as creation, deletion, and modification.
+5. **Analysis**: For analysis, go to the Strategic Analytics tab.
 
 ---
 
@@ -172,48 +171,24 @@ python -m pytest tests/ -v
 
 ## Known Issues/Limitations
 
-- **Concurrency**: Designed for single-admin use; no multi-user file locking.
-- **AIS Feed**: Vessel tracking is simulated; no live AIS integration.
-- **Network**: UI layout is optimized for standard desktop resolutions.
+- **Concurrency**: The program is built for single-user usage, and there is no provision of multi-user locking of files.
+- **AIS Data**: The tracking of vessels is artificial; live AIS data is not supported.
+- **Network**: GUI design takes into account common desktop display configurations.
 
 ---
 
-## Future Enhancements
+## Future Improvements
 
-- **Live AIS Integration**: Connecting to real-world vessel data feeds.
-- **Machine Learning**: Predictive models for berth congestion forecasting.
-- **Database Backend**: Migrating from CSV to PostgreSQL for scalability.
-- **Mobile Access**: Developing a responsive interface for field workers.
+- **AIS Live**: Support for live AIS vessel data is expected in future versions.
+- **Machine Learning**: Implementation of machine learning techniques to predict port congestion.
+- **PostgreSQL Back-end**: Migrating from storing data in .csv format to PostgreSQL.
+- **Interface for Mobile Device**: Design of an adaptive interface for mobile devices.
 
 ---
 
 ## Contributors
 
 - **Developer**: Manahil
-- **Student ID**: [ID]
+- **Student ID**: 2515128
 - **Project**: CPS7002 Assessment 2
 - **Institution**: St Mary's University
-
----
-
-## Licensing
-
-This project is for academic purposes only and is not intended for commercial deployment.
-
----
-
-## References & Acknowledgements
-
-- **Dash Documentation**: Official guides for component development.
-- **Plotly Python Library**: Visualization standards.
-- **Academic Sources**: Design decisions informed by maritime logistics case studies.
-
----
-
-## Appendix
-
-### Accessibility Considerations
-The dashboard uses high-contrast text and standard HTML elements to ensure readability across different browser environments.
-
-### Benchmark Results
-The system maintains a sub-200ms response time for local CSV operations and UI callback execution under standard prototype data loads.
