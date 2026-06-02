@@ -526,3 +526,5 @@ N9398,Berth Closure,L0314,Critical,Berth 29 Area B temporarily closed for mainte
 N6620,Security Notice,L0008,Low,Security incident reported near Berth 10 Area B,2026-06-03T00:03:32.889242
 N1696,Berth Closure,L0235,Medium,Berth 44 Area D temporarily closed for maintenance,2026-06-03T00:03:37.883659
 N3330,Congestion Alert,L0432,Low,High traffic congestion detected at Berth 47 Area A,2026-06-03T00:03:41.881545
+N8565,Hazardous Cargo Warning,L0246,High,Hazardous materials detected at Berth 18 Area A,2026-06-03T00:03:47.881839
+N4266,Security Notice,L0093,Medium,Security incident reported near Berth 43 Area C,2026-06-03T00:03:57.881207
