@@ -528,3 +528,19 @@ N1696,Berth Closure,L0235,Medium,Berth 44 Area D temporarily closed for maintena
 N3330,Congestion Alert,L0432,Low,High traffic congestion detected at Berth 47 Area A,2026-06-03T00:03:41.881545
 N8565,Hazardous Cargo Warning,L0246,High,Hazardous materials detected at Berth 18 Area A,2026-06-03T00:03:47.881839
 N4266,Security Notice,L0093,Medium,Security incident reported near Berth 43 Area C,2026-06-03T00:03:57.881207
+N5172,Security Notice,L0383,Critical,Security incident reported near Berth 45 Area D,2026-06-03T00:05:07.884464
+N8470,Congestion Alert,L0054,Medium,High traffic congestion detected at Berth 30 Area C,2026-06-03T00:05:12.887138
+N8580,Weather Warning,L0179,Low,Severe weather alert affecting Berth 32 Area D area,2026-06-03T00:05:22.882782
+N5315,Congestion Alert,L0018,High,High traffic congestion detected at Berth 18 Area B,2026-06-03T00:05:32.883825
+N3827,Weather Warning,L0316,Low,Severe weather alert affecting Berth 22 Area A area,2026-06-03T00:05:42.885042
+N1643,Berth Closure,L0294,High,Berth 12 Area B temporarily closed for maintenance,2026-06-03T00:05:47.884081
+N9397,Hazardous Cargo Warning,L0287,High,Hazardous materials detected at Berth 43 Area D,2026-06-03T00:06:25.884606
+N4256,Weather Warning,L0331,Medium,Severe weather alert affecting Berth 45 Area B area,2026-06-03T00:08:51.597701
+N3608,Security Notice,L0345,Low,Security incident reported near Berth 45 Area B,2026-06-03T00:08:56.595352
+N6798,Berth Closure,L0072,Low,Berth 33 Area D temporarily closed for maintenance,2026-06-03T00:09:57.885322
+N6867,Congestion Alert,L0052,Medium,High traffic congestion detected at Berth 32 Area D,2026-06-03T00:10:02.885094
+N9909,Weather Warning,L0018,Low,Severe weather alert affecting Berth 18 Area B area,2026-06-03T00:10:12.885044
+N6392,Berth Closure,L0222,Low,Berth 38 Area C temporarily closed for maintenance,2026-06-03T00:10:26.592818
+N8842,Congestion Alert,L0031,Medium,High traffic congestion detected at Berth 10 Area C,2026-06-03T00:10:37.887060
+N9461,Equipment Failure,L0091,High,Crane L0091 experiencing mechanical issues,2026-06-03T00:10:42.891436
+N8701,Congestion Alert,L0234,Medium,High traffic congestion detected at Berth 8 Area D,2026-06-03T00:11:27.884278
