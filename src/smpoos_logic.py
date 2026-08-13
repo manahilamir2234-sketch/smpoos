@@ -101,7 +101,7 @@ class Location(PortEntity):
         }
 
     def validate(self):
-        return bool(self.location_id) and bool(self.name)
+        return bool(self.location_id) and bool(self.name) and self.capacity_tonnes >= 0
 
 
 class Route(PortEntity):
@@ -174,7 +174,12 @@ class User(PortEntity):
         }
 
     def validate(self):
-        return bool(self.user_id) and bool(self.email)
+        import re
+        if not self.user_id or not self.name:
+            return False
+        # Basic email format check for GDPR-quality personnel records
+        pattern = r"^[^@\s]+@[^@\s]+\.[^@\s]+$"
+        return bool(re.match(pattern, str(self.email or "")))
 
     def is_active(self):
         return self.active == "Yes"
@@ -394,6 +399,8 @@ class SMPOOS:
         """Create and add a new location.
         """
         location = Location(location_id, name, loc_type, status, capacity)
+        if not location.validate():
+            raise ValueError("Invalid location data")
         self.locations[location_id] = location
         self._save_to_csv('locations')
         self._log_audit('CREATE', 'location', location_id,
@@ -528,11 +535,40 @@ class SMPOOS:
 
         notification = Notification(
             notification_id, alert_type, location_id, severity, message, timestamp)
+        if not notification.validate():
+            raise ValueError("Invalid notification data")
         self.notifications[notification_id] = notification
         self._save_to_csv('notifications')
         self._log_audit('CREATE', 'notification', notification_id,
                         f"Created {alert_type} notification")
+
+        # Brief requires email delivery as well as in-system alerts.
+        # Production SMTP is out of scope; delivery is simulated and logged.
+        try:
+            from src.utils.email_utils import send_notification_email
+            recipients = [
+                u for u in self.users.values()
+                if u.is_active() and u.email
+            ]
+            for user in recipients[:5]:
+                send_notification_email(
+                    user.email,
+                    f"[SMPOOS] {severity}: {alert_type}",
+                    message,
+                )
+        except Exception:
+            pass
+
         return notification
+
+    def export_user_data(self, user_id):
+        """GDPR-style data portability: return one user's stored record."""
+        user = self.users.get(user_id)
+        return user.to_dict() if user else None
+
+    def erase_user_data(self, user_id):
+        """GDPR-style erasure request: remove a personnel record."""
+        return self.delete_user(user_id)
 
     def update_notification(self, notification_id, **kwargs):
         """Update an existing notification.

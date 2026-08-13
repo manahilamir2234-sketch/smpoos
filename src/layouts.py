@@ -160,7 +160,7 @@ def get_overview_layout(df_loc, df_route, df_notif):
             ]), width=12),
         ]),
 
-        # Audit Log Section (Placeholder)
+        # Audit Log Section
         dbc.Row([
             dbc.Col(dbc.Card([
                 dbc.CardHeader([
@@ -171,7 +171,7 @@ def get_overview_layout(df_loc, df_route, df_notif):
                     html.Div(
                         id="audit-log-section",
                         children=[
-                            html.P("Audit log entries will appear here...")
+                            html.P("Loading audit entries...")
                         ]
                     )
                 )
@@ -358,55 +358,69 @@ def get_analytics_layout(df_loc, df_notif):
     )
     fig_severity.update_layout(margin=dict(l=20, r=20, t=50, b=20))
 
+    # Charts Row 1 — Bootstrap grid (assessment brief recommends DBC grids)
+    charts_row_1 = dbc.Row([
+        dbc.Col(dbc.Card([dbc.CardBody(dcc.Graph(
+            figure=px.pie(df_loc, names='type', hole=0.5, template="plotly_white",
+                          title="Asset Mix by Type")))]), md=4),
+        dbc.Col(dbc.Card([dbc.CardBody(dcc.Graph(
+            figure=px.bar(df_notif['alert_type'].value_counts().reset_index(),
+                          x='alert_type', y='count', template="plotly_white",
+                          title="Alerts by Type")))]), md=4),
+        dbc.Col(dbc.Card([dbc.CardBody(dcc.Graph(figure=fig_severity))]), md=4),
+    ], className="mb-3")
+
+    # Congestion-style heatmap of alert activity by hour (analytics requirement)
+    try:
+        notif_copy = df_notif.copy()
+        notif_copy['hour'] = notif_copy['timestamp'].astype(str).str[11:13]
+        heat = notif_copy.groupby(['hour', 'severity']).size().reset_index(name='count')
+        fig_heat = px.density_heatmap(
+            heat, x='hour', y='severity', z='count',
+            title='Alert Activity Heatmap (Hour vs Severity)',
+            template='plotly_white'
+        )
+    except Exception:
+        fig_heat = px.scatter(title='Alert heatmap unavailable')
+
+    charts_row_2 = dbc.Row([
+        dbc.Col(dbc.Card([
+            dbc.CardHeader("Port Infrastructure Load Analysis"),
+            dbc.CardBody(dcc.Graph(figure=px.treemap(
+                df_loc, path=['type', 'status'], values='capacity_tonnes',
+                template="plotly_white")))
+        ]), md=4),
+        dbc.Col(dbc.Card([
+            dbc.CardHeader("Capacity Utilization by Location Type"),
+            dbc.CardBody(dcc.Graph(figure=fig_capacity))
+        ]), md=4),
+        dbc.Col(dbc.Card([
+            dbc.CardHeader("Operational Congestion Heatmap"),
+            dbc.CardBody(dcc.Graph(figure=fig_heat))
+        ]), md=4),
+    ])
+
     return html.Div([
         section_header("Strategic Analytics",
                        "Performance assessment and historical trends"),
-
-        # Date Range Filter
         dbc.Row([
             dbc.Col([
                 dbc.Card([
                     dbc.CardBody([
                         dbc.Row([
-                            dbc.Col([
-                                dbc.Label(
-                                    [html.I(), "Date Range Filter"])
-                            ], width="auto"),
-                            dbc.Col([
-                                dcc.DatePickerRange(
-                                    id='date-filter',
-                                    start_date_placeholder_text='Start Date',
-                                    end_date_placeholder_text='End Date'
-                                )
-                            ])
+                            dbc.Col(dbc.Label("Date Range Filter"), width="auto"),
+                            dbc.Col(dcc.DatePickerRange(
+                                id='date-filter',
+                                start_date_placeholder_text='Start Date',
+                                end_date_placeholder_text='End Date'
+                            ))
                         ])
                     ])
                 ])
             ], width=12)
-        ]),
-
-        # Charts Row 1
-        html.Table([
-            html.Tr([
-                html.Td(dbc.Card([dbc.CardBody(dcc.Graph(figure=px.pie(df_loc, names='type', hole=0.5, template="plotly_white")))])),
-                html.Td(dbc.Card([dbc.CardBody(dcc.Graph(figure=px.bar(df_notif['alert_type'].value_counts().reset_index(), x='alert_type', y='count', template="plotly_white")))])),
-                html.Td(dbc.Card([dbc.CardBody(dcc.Graph(figure=fig_severity))]))
-            ])
-        ]),
-
-        # Charts Row 2
-        html.Table([
-            html.Tr([
-                html.Td(dbc.Card([
-                    dbc.CardHeader("Port Infrastructure Load Analysis"),
-                    dbc.CardBody(dcc.Graph(figure=px.treemap(df_loc, path=['type', 'status'], values='capacity_tonnes', template="plotly_white")))
-                ])),
-                html.Td(dbc.Card([
-                    dbc.CardHeader("Capacity Utilization by Location Type"),
-                    dbc.CardBody(dcc.Graph(figure=fig_capacity))
-                ]))
-            ])
-        ])
+        ], className="mb-3"),
+        charts_row_1,
+        charts_row_2
     ])
 
 

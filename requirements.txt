@@ -4,6 +4,5 @@ pandas
 plotly
 matplotlib
 seaborn
-markdown
-PyPDF2
 python-dotenv
+pytest
