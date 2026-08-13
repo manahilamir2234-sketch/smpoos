@@ -47,11 +47,13 @@ def register_notification_callbacks(app, system):
          State("new-notif-type", "value"),
          State("new-notif-location", "value"),
          State("new-notif-severity", "value"),
-         State("new-notif-message", "value")],
+         State("new-notif-message", "value"),
+         State("active-role", "data")],
         prevent_initial_call=True
     )
-    def handle_add_notification(n, nid, alert_type, location_id, severity, message):
-        if n and nid and message:
+    def handle_add_notification(n, nid, alert_type, location_id, severity, message, role):
+        from src.utils.rbac_utils import can_modify_data
+        if n and nid and message and can_modify_data(role or "Harbourmaster"):
             system.add_notification(
                 nid, alert_type or "Equipment Failure", location_id or "", severity or "Medium", message)
         return system.get_notifications_df().to_dict('records')
@@ -61,10 +63,12 @@ def register_notification_callbacks(app, system):
         Input("confirm-delete-notif", "n_clicks"),
         State("notif-table", "selected_rows"),
         State("notif-table", "data"),
+        State("active-role", "data"),
         prevent_initial_call=True
     )
-    def handle_delete_notification(n, selected_rows, data):
-        if n and selected_rows and data:
+    def handle_delete_notification(n, selected_rows, data, role):
+        from src.utils.rbac_utils import can_modify_data
+        if n and selected_rows and data and can_modify_data(role or "Harbourmaster"):
             row = data[selected_rows[0]]
             nid = row.get('notification_id')
             if nid:
@@ -79,14 +83,3 @@ def register_notification_callbacks(app, system):
     def update_notif_button_states(selected_rows):
         disabled = not (selected_rows and len(selected_rows) > 0)
         return disabled, disabled
-
-    @app.callback(
-        Output("notif-table", "data", allow_duplicate=True),
-        Input("notif-severity-filter", "value"),
-        prevent_initial_call=True
-    )
-    def filter_notifications_by_severity(severity):
-        df = system.get_notifications_df()
-        if severity and severity != "all":
-            df = df[df['severity'] == severity]
-        return df.to_dict('records')

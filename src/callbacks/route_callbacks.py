@@ -64,11 +64,13 @@ def register_route_callbacks(app, system):
          State("new-route-end", "value"),
          State("new-route-type", "value"),
          State("new-route-distance", "value"),
-         State("new-route-status", "value")],
+         State("new-route-status", "value"),
+         State("active-role", "data")],
         prevent_initial_call=True
     )
-    def handle_add_route(n, rid, start, end, rtype, distance, status):
-        if n and rid and start and end:
+    def handle_add_route(n, rid, start, end, rtype, distance, status, role):
+        from src.utils.rbac_utils import can_modify_data
+        if n and rid and start and end and can_modify_data(role or "Harbourmaster"):
             system.add_route(
                 rid, start, end, rtype or "Shipping Lane", distance or 0, status or "Open")
         return system.get_routes_df().to_dict('records')

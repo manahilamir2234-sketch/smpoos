@@ -63,7 +63,9 @@ def create_sidebar():
                     html.Span(),
                     html.Small("Vessel Tracking: ACTIVE")
                 ]),
-                html.Small("System Health: 100%")
+                html.Small("System Health: 100%"),
+                html.Hr(),
+                html.Small(id="rbac-status-text", children="Active role: Harbourmaster"),
             ])
         ],
     )

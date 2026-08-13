@@ -18,8 +18,11 @@ from src.smpoos_logic import SMPOOS
 from src.callbacks import register_all_callbacks
 
 # --- App Init ---
+# Bootstrap stylesheet is listed in the assessment brief (Dash Bootstrap Components)
+# for professional layout, cards, grids and responsive columns.
 app = dash.Dash(
     __name__,
+    external_stylesheets=[dbc.themes.BOOTSTRAP],
     suppress_callback_exceptions=True,
     meta_tags=[{"name": "viewport",
                 "content": "width=device-width, initial-scale=1"}]
@@ -35,6 +38,7 @@ system = SMPOOS(data_dir=DATA_DIR)
 app.layout = html.Div([
     dcc.Location(id="url"),
     dcc.Store(id="authenticated-user", data=None),
+    dcc.Store(id="active-role", data="Harbourmaster"),
     dcc.Interval(
         id="realtime-interval",
         interval=5000,
@@ -42,19 +46,20 @@ app.layout = html.Div([
         max_intervals=-1
     ),
     html.Div(id="login-page"),
-    
-    html.Table([
-        html.Tr([
-            # Column 1: Sidebar
-            html.Td(
-                html.Div(create_sidebar(), id="sidebar-container")
+    dbc.Container([
+        dbc.Row([
+            dbc.Col(
+                html.Div(create_sidebar(), id="sidebar-container"),
+                width=3,
+                lg=2,
             ),
-            # Column 2: Content
-            html.Td(
-                html.Div(id="page-content")
-            )
-        ])
-    ])
+            dbc.Col(
+                html.Div(id="page-content"),
+                width=9,
+                lg=10,
+            ),
+        ], className="g-3 mt-2")
+    ], fluid=True)
 ])
 
 

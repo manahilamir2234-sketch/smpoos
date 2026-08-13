@@ -72,12 +72,14 @@ def register_location_callbacks(app, system):
          State("new-loc-name", "value"),
          State("new-loc-type", "value"),
          State("new-loc-status", "value"),
-         State("new-loc-capacity", "value")],
+         State("new-loc-capacity", "value"),
+         State("active-role", "data")],
         prevent_initial_call=True
     )
-    def handle_add_location(n, lid, name, ltype, status, cap):
+    def handle_add_location(n, lid, name, ltype, status, cap, role):
         """Create a new location."""
-        if n and lid and name:
+        from src.utils.rbac_utils import can_modify_data
+        if n and lid and name and can_modify_data(role or "Harbourmaster"):
             system.add_location(lid, name, ltype or "Berth",
                                 status or "Active", cap or 0)
         return system.get_locations_df().to_dict('records')
@@ -112,12 +114,14 @@ def register_location_callbacks(app, system):
          State("edit-loc-name", "value"),
          State("edit-loc-type", "value"),
          State("edit-loc-status", "value"),
-         State("edit-loc-capacity", "value")],
+         State("edit-loc-capacity", "value"),
+         State("active-role", "data")],
         prevent_initial_call=True
     )
-    def handle_update_location(n, lid, name, ltype, status, cap):
+    def handle_update_location(n, lid, name, ltype, status, cap, role):
         """Update an existing location."""
-        if n and lid:
+        from src.utils.rbac_utils import can_modify_data
+        if n and lid and can_modify_data(role or "Harbourmaster"):
             system.update_location(
                 lid, name=name, loc_type=ltype, status=status, capacity=cap)
         return system.get_locations_df().to_dict('records')
@@ -127,11 +131,13 @@ def register_location_callbacks(app, system):
         Input("confirm-delete-loc", "n_clicks"),
         State("asset-table", "selected_rows"),
         State("asset-table", "data"),
+        State("active-role", "data"),
         prevent_initial_call=True
     )
-    def handle_delete_location(n, selected_rows, data):
+    def handle_delete_location(n, selected_rows, data, role):
         """Delete the selected location."""
-        if n and selected_rows and data:
+        from src.utils.rbac_utils import can_modify_data
+        if n and selected_rows and data and can_modify_data(role or "Harbourmaster"):
             row = data[selected_rows[0]]
             lid = row.get('location_id')
             if lid:
