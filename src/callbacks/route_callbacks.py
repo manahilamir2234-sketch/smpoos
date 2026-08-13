@@ -107,11 +107,13 @@ def register_route_callbacks(app, system):
          State("edit-route-end", "value"),
          State("edit-route-type", "value"),
          State("edit-route-distance", "value"),
-         State("edit-route-status", "value")],
+         State("edit-route-status", "value"),
+         State("active-role", "data")],
         prevent_initial_call=True
     )
-    def handle_update_route(n, rid, start, end, rtype, distance, status):
-        if n and rid:
+    def handle_update_route(n, rid, start, end, rtype, distance, status, role):
+        from src.utils.rbac_utils import can_modify_data
+        if n and rid and can_modify_data(role or "Harbourmaster"):
             system.update_route(rid, start_location=start, end_location=end,
                                 route_type=rtype, distance_km=distance, status=status)
         return system.get_routes_df().to_dict('records')
@@ -121,10 +123,12 @@ def register_route_callbacks(app, system):
         Input("confirm-delete-route", "n_clicks"),
         State("route-table", "selected_rows"),
         State("route-table", "data"),
+        State("active-role", "data"),
         prevent_initial_call=True
     )
-    def handle_delete_route(n, selected_rows, data):
-        if n and selected_rows and data:
+    def handle_delete_route(n, selected_rows, data, role):
+        from src.utils.rbac_utils import can_modify_data
+        if n and selected_rows and data and can_modify_data(role or "Harbourmaster"):
             row = data[selected_rows[0]]
             rid = row.get('route_id')
             if rid:

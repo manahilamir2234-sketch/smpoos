@@ -602,7 +602,7 @@ def get_user_layout(df_users):
                     id="open-user-modal-btn", color="primary"), width="auto"),
         ]),
 
-        # Action buttons row (Edit/Delete)
+        # Action buttons row (Edit/Delete + GDPR helpers)
         dbc.Row([
             dbc.Col([
                 dbc.ButtonGroup([
@@ -610,9 +610,14 @@ def get_user_layout(df_users):
                                id="edit-user-btn", color="warning", outline=True, disabled=True),
                     dbc.Button([html.I(), "Delete Selected"],
                                id="delete-user-btn", color="danger", outline=True, disabled=True),
+                    dbc.Button("Export Selected (GDPR)",
+                               id="export-user-btn", color="info", outline=True, disabled=True),
+                    dbc.Button("Erase Selected (GDPR)",
+                               id="erase-user-btn", color="secondary", outline=True, disabled=True),
                 ])
             ], width="auto")
         ]),
+        html.Div(id="gdpr-export-output"),
 
         dbc.Card([
             dbc.CardBody(dash_table.DataTable(
