@@ -83,3 +83,22 @@ def register_notification_callbacks(app, system):
     def update_notif_button_states(selected_rows):
         disabled = not (selected_rows and len(selected_rows) > 0)
         return disabled, disabled
+
+    @app.callback(
+        Output("notif-table", "data", allow_duplicate=True),
+        Input("acknowledge-notif-btn", "n_clicks"),
+        State("notif-table", "selected_rows"),
+        State("notif-table", "data"),
+        State("active-role", "data"),
+        prevent_initial_call=True
+    )
+    def handle_acknowledge_notification(n, selected_rows, data, role):
+        """Mark selected alert as acknowledged (admin audit action)."""
+        from src.utils.rbac_utils import can_modify_data
+        if n and selected_rows and data and can_modify_data(role or "Harbourmaster"):
+            row = data[selected_rows[0]]
+            nid = row.get("notification_id")
+            msg = row.get("message", "")
+            if nid and not str(msg).startswith("[ACK]"):
+                system.update_notification(nid, message=f"[ACK] {msg}")
+        return system.get_notifications_df().to_dict("records")

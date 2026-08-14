@@ -22,10 +22,11 @@ def register_auth_callbacks(app, system):
         Output("login-error", "children"),
         Input("login-btn", "n_clicks"),
         [State("login-user-id", "value"),
-         State("login-password", "value")],
+         State("login-password", "value"),
+         State("login-consent", "value")],
         prevent_initial_call=True
     )
-    def handle_login(n_clicks, username, password):
+    def handle_login(n_clicks, username, password, consent):
         """
         Handle admin login attempt.
 
@@ -33,6 +34,7 @@ def register_auth_callbacks(app, system):
             n_clicks: Number of clicks on login button
             username: Entered username
             password: Entered password
+            consent: GDPR-style consent checklist values
 
         Returns:
             Tuple of (user_data, error_message)
@@ -43,9 +45,15 @@ def register_auth_callbacks(app, system):
                 "Please enter both Username and Password"
             ])
 
+        if not consent or "consent" not in consent:
+            return None, html.Div([
+                html.I(),
+                "Please accept the data-processing consent notice before login."
+            ])
+
         # Verify admin credentials
         if verify_admin_credentials(username, password):
-            # Get admin info and store in localStorage
+            # Get admin info and store in session store
             admin_info = get_admin_info()
             return admin_info, ""
         else:

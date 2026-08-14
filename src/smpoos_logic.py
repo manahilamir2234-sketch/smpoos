@@ -809,13 +809,15 @@ class SMPOOS:
     def get_route_efficiency_metrics(self):
         """
         Calculate route efficiency based on distance and status.
+        Uses math for a simple distance penalty curve.
         """
+        import math
         import random
 
         data = []
         for route in self.routes.values():
             # Efficiency = 100 - (distance penalty + status penalty)
-            distance_penalty = min(30, route.distance_km / 10)
+            distance_penalty = min(30, math.sqrt(max(route.distance_km, 0)) * 3)
 
             status = route.status.value if isinstance(
                 route.status, EntityStatus) else route.status
@@ -834,6 +836,34 @@ class SMPOOS:
             })
 
         return pd.DataFrame(data)
+
+    def suggest_berth_allocation(self):
+        """
+        Suggest an active berth with spare capacity using a simple score.
+        Prototype of the brief's berth allocation optimisation theme.
+        """
+        import math
+
+        candidates = []
+        for loc in self.locations.values():
+            status = loc.status.value if isinstance(loc.status, EntityStatus) else loc.status
+            loc_type = loc.type.value if isinstance(loc.type, LocationType) else loc.type
+            if status != "Active" or loc_type != "Berth":
+                continue
+            # Prefer larger capacity with a diminishing return via sqrt
+            score = math.sqrt(max(loc.capacity_tonnes, 0))
+            candidates.append((score, loc))
+
+        if not candidates:
+            return "No active berths available for allocation suggestion."
+
+        candidates.sort(key=lambda x: x[0], reverse=True)
+        best = candidates[0][1]
+        return (
+            f"Suggested berth allocation: {best.name} ({best.location_id}) "
+            f"with capacity {best.capacity_tonnes} tonnes "
+            f"(score={candidates[0][0]:.1f}). Review restricted routes before confirming."
+        )
 
     def get_alert_trends(self):
         """

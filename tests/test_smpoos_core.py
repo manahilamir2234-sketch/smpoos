@@ -128,3 +128,7 @@ class TestAnalyticsHelpers:
         assert exported["email"] == "t@port.com"
         assert temp_system.erase_user_data("UGDPR") is True
         assert temp_system.export_user_data("UGDPR") is None
+
+    def test_berth_allocation_suggestion(self, temp_system):
+        text = temp_system.suggest_berth_allocation()
+        assert "Suggested berth" in text or "No active berths" in text

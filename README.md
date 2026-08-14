@@ -35,11 +35,11 @@ HarbourView needs a single place to see berth status, route availability and saf
 
 | Feature | Why it exists | How it works (brief) |
 |---|---|---|
-| Login + session store | Secure admin entry | Credentials from `.env`; Dash `dcc.Store` |
+| Login + consent + logout | Secure admin entry | Credentials from `.env`; consent checkbox; Logout clears session |
 | Asset / route / user / alert CRUD | Brief management requirement | Modals + CSV rewrite via `SMPOOS` |
 | Role selector (RBAC prototype) | Authorised changes only | Write roles enforced in callbacks; alert severity focus by role |
-| Dashboard widgets | Real-time monitoring theme | 5s `Interval` refresh + audit list |
-| Analytics page | Reporting requirement | Plotly pie/bar/treemap/heatmap |
+| Dashboard widgets | Real-time monitoring theme | 5s refresh, audit list, simulated wind/tide/visibility, acknowledge |
+| Analytics page | Reporting requirement | Plotly charts + heatmap, date filter, berth suggestion |
 | Simulated email log | Brief “email delivery” path | `email_utils.send_notification_email` |
 | GDPR helpers | Portability / erasure theme | `export_user_data` / `erase_user_data` |
 
@@ -59,7 +59,7 @@ Technologies: Dash, Dash Bootstrap Components, Plotly, pandas, matplotlib, seabo
 smpoos_software_artefact/
 ├── data/                 # Moodle CSV sources
 ├── src/
-│   ├── callbacks/        # auth, CRUD, realtime, rbac
+│   ├── callbacks/        # auth, CRUD, realtime, rbac, analytics
 │   ├── utils/            # auth, rbac, email, charts, simulation
 │   ├── smpoos_logic.py   # OOP domain + persistence
 │   ├── layouts.py
@@ -120,11 +120,11 @@ Assumption: IDs are stable strings as supplied on Moodle.
 
 ## Usage Instructions
 
-1. Start the app and log in.  
-2. Use **Active Role** in the sidebar to switch Harbourmaster / Safety Officer / Stevedore, etc.  
-3. Dashboard refreshes metrics roughly every five seconds.  
+1. Start the app, tick consent, and log in (`admin` / `admin123` by default).  
+2. Use **Active Role** in the sidebar; use **Logout** to clear the session.  
+3. Dashboard refreshes metrics (including simulated env widgets) roughly every five seconds; select an alert and **Acknowledge**.  
 4. Asset Registry / Routes / Personnel / Notifications support CRUD for write-enabled roles.  
-5. Strategic Analytics shows capacity and alert charts including a heatmap.
+5. Strategic Analytics: set a date range to refresh charts; berth suggestion text updates with the filter.
 
 ---
 
@@ -134,7 +134,7 @@ Assumption: IDs are stable strings as supplied on Moodle.
 python -m pytest tests/ -v
 ```
 
-Coverage includes entity validation, CRUD + CSV round-trip, RBAC helpers, auth defaults, email simulation log, stats summary, GDPR export/erase. Current suite: **19** tests.
+Coverage includes entity validation, CRUD + CSV round-trip, RBAC helpers, auth defaults, email simulation log, stats summary, GDPR export/erase, berth suggestion. Current suite: **20** tests.
 
 ---
 

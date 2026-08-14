@@ -39,18 +39,23 @@ def get_login_layout():
                                 type="password",
                             )
                         ]),
-
+                        dbc.Checklist(
+                            id="login-consent",
+                            options=[{
+                                "label": "I consent to processing of synthetic personnel data for this academic prototype (GDPR-style notice).",
+                                "value": "consent"
+                            }],
+                            value=[],
+                        ),
                         html.Div(
                             id="login-error",
                             children="",
                         ),
-
                         dbc.Button(
                             ["Login"],
                             id="login-btn",
                             color="info"
                         ),
-
                         html.Div([
                             html.Hr(),
                             html.P([
@@ -77,15 +82,20 @@ def get_overview_layout(df_loc, df_route, df_notif):
     Returns:
         html.Div: Dashboard layout component
     """
-    # Executive Metrics
-    metrics = html.Table([
-        html.Tr([
-            html.Td(stat_card("Berth Occupancy", f"{len(df_loc[df_loc['status'] == 'Active'])}/{len(df_loc)}", "", "green", "stat-berth-occupancy")),
-            html.Td(stat_card("Active Routes", len(df_route[df_route['status'] == 'Open']), "", "blue", "stat-active-routes")),
-            html.Td(stat_card("Critical Alerts", len(df_notif[df_notif['severity'] == 'Critical']), "", "red", "stat-critical-alerts")),
-            html.Td(stat_card("Incoming Vessels", "12", "", "orange"))
-        ])
-    ])
+    # Executive Metrics + simulated environmental readings (brief monitoring theme)
+    import random
+    metrics = dbc.Row([
+        dbc.Col(stat_card("Berth Occupancy", f"{len(df_loc[df_loc['status'] == 'Active'])}/{len(df_loc)}", "", "green", "stat-berth-occupancy"), md=3),
+        dbc.Col(stat_card("Active Routes", len(df_route[df_route['status'] == 'Open']), "", "blue", "stat-active-routes"), md=3),
+        dbc.Col(stat_card("Critical Alerts", len(df_notif[df_notif['severity'] == 'Critical']), "", "red", "stat-critical-alerts"), md=3),
+        dbc.Col(stat_card("Incoming Vessels", str(random.randint(8, 18)), "", "orange", "stat-incoming-vessels"), md=3),
+    ], className="mb-2")
+
+    env_row = dbc.Row([
+        dbc.Col(stat_card("Wind (kn)", f"{random.uniform(4, 22):.1f}", "", "blue", "stat-wind"), md=4),
+        dbc.Col(stat_card("Tide (m)", f"{random.uniform(0.4, 3.2):.2f}", "", "green", "stat-tide"), md=4),
+        dbc.Col(stat_card("Visibility (km)", f"{random.uniform(2, 12):.1f}", "", "orange", "stat-visibility"), md=4),
+    ], className="mb-3")
 
     # Layer 2: Main Analytical Chart (Hero Section)
     fig_route = px.strip(
@@ -119,6 +129,8 @@ def get_overview_layout(df_loc, df_route, df_notif):
         section_header("Operational Command Deck",
                        "Strategic real-time HarbourView maritime logistics overview"),
         metrics,
+        html.P("Environmental readings below are simulated for demonstration (no live sensors)."),
+        env_row,
 
         # HERO SECTION: The Graph (Now Full Width for Clarity)
         dbc.Card([
@@ -419,8 +431,16 @@ def get_analytics_layout(df_loc, df_notif):
                 ])
             ], width=12)
         ], className="mb-3"),
-        charts_row_1,
-        charts_row_2
+        html.Div(id="analytics-charts-container", children=[
+            charts_row_1,
+            charts_row_2,
+            dbc.Alert(
+                id="berth-suggestion-text",
+                color="info",
+                className="mt-3",
+                children="Open a date range (or leave blank and change dates) to refresh charts. Berth suggestions use active berth capacity scores."
+            )
+        ])
     ])
 
 

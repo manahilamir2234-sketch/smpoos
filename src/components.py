@@ -61,11 +61,13 @@ def create_sidebar():
             html.Div([
                 html.Div([
                     html.Span(),
-                    html.Small("Vessel Tracking: ACTIVE")
+                    html.Small("Vessel Tracking: ACTIVE (simulated)")
                 ]),
                 html.Small("System Health: 100%"),
                 html.Hr(),
                 html.Small(id="rbac-status-text", children="Active role: Harbourmaster"),
+                html.Br(),
+                dbc.Button("Logout", id="logout-btn", color="secondary", size="sm", className="mt-2"),
             ])
         ],
     )

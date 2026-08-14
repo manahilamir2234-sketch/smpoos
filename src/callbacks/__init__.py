@@ -10,6 +10,7 @@ from .user_callbacks import register_user_callbacks
 from .notification_callbacks import register_notification_callbacks
 from .realtime_callbacks import register_realtime_callbacks
 from .rbac_callbacks import register_rbac_callbacks
+from .analytics_callbacks import register_analytics_callbacks
 
 
 def register_all_callbacks(app, system):
@@ -27,3 +28,4 @@ def register_all_callbacks(app, system):
     register_notification_callbacks(app, system)
     register_realtime_callbacks(app, system)
     register_rbac_callbacks(app, system)
+    register_analytics_callbacks(app, system)
